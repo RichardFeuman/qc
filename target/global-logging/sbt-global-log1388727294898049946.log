@@ -1,0 +1,16 @@
+[debug] > Exec(all {file:/C:/Users/Tester/spark_c/spark-course2/}spark-course2/products {file:/C:/Users/Tester/spark_c/spark-course2/}spark-course2/test:products, None, None)
+[debug] Evaluating tasks: Compile / products, Test / products
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[info] compiling 1 Scala source to C:\Users\Tester\spark_c\spark-course2\target\scala-2.13\classes ...
+[error] C:\Users\Tester\spark_c\spark-course2\src\main\scala\NullFiller.scala:1:8: encountered unrecoverable cycle resolving import.
+[error] Note: this is often due in part to a class depending on a definition nested within its companion.
+[error] If applicable, you may wish to try moving some members into another object.
+[error] import NullFiller.spark
+[error]        ^
+[error] C:\Users\Tester\spark_c\spark-course2\src\main\scala\NullFiller.scala:44:34: Unable to find encoder for type NullFiller.Shoes. An implicit Encoder[NullFiller.Shoes] is needed to store NullFiller.Shoes instances in a Dataset. Primitive types (Int, String, etc) and Product types (case classes) are supported by importing spark.implicits._  Support for serializing other types will be added in future releases.
+[error]   val athlShoesDS=athlShoes3DF.as[Shoes]
+[error]                                  ^
+[error] two errors found
+[error] (Compile / compileIncremental) Compilation failed
+[error] Total time: 0 s, completed 6 июн. 2024 г., 0:09:52
+[debug] > Exec(idea-shell, None, None)

@@ -1,0 +1,8 @@
+[debug] > Exec(all {file:/C:/Users/Tester/spark_c/spark-course2/}spark-course2/products {file:/C:/Users/Tester/spark_c/spark-course2/}spark-course2/test:products, None, None)
+[debug] Evaluating tasks: Compile / products, Test / products
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[info] compiling 1 Scala source to C:\Users\Tester\spark_c\spark-course2\target\scala-2.12\classes ...
+[info] done compiling
+[debug] Forcing garbage collection...
+[success] Total time: 2 s, completed 30 июл. 2024 г., 22:18:36
+[debug] > Exec(idea-shell, None, None)

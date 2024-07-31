@@ -1,0 +1,25 @@
+[debug] > Exec(all {file:/C:/Users/Tester/spark_c/spark-course2/}spark-course2/products {file:/C:/Users/Tester/spark_c/spark-course2/}spark-course2/test:products, None, None)
+[debug] Evaluating tasks: Compile / products, Test / products
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[info] compiling 2 Scala sources to C:\Users\Tester\spark_c\spark-course2\target\scala-2.13\classes ...
+[warn] C:\Users\Tester\spark_c\spark-course2\src\main\scala\PatternMatching.scala:25:24: match may not be exhaustive.
+[warn] It would fail on the following input: Dog(_, _)
+[warn]     def whoIam: Unit = this match {
+[warn]                        ^
+[warn] C:\Users\Tester\spark_c\spark-course2\src\main\scala\PatternMatching.scala:61:3: match may not be exhaustive.
+[warn] It would fail on the following input: Coffee((x: String forSome x not in ("capuccinoX2", "latteX2")), _)
+[warn]   coffee1 match {
+[warn]   ^
+[warn] C:\Users\Tester\spark_c\spark-course2\src\main\scala\PatternMatching.scala:101:14: match may not be exhaustive.
+[warn] It would fail on the following input: Nil
+[warn]   val lMatch=l match {
+[warn]              ^
+[warn] C:\Users\Tester\spark_c\spark-course2\src\main\scala\PatternMatching.scala:110:15: match may not be exhaustive.
+[warn] It would fail on the following input: Nil
+[warn]   val lMatch2=l match {
+[warn]               ^
+[warn] four warnings found
+[info] done compiling
+[debug] Forcing garbage collection...
+[success] Total time: 7 s, completed 22 июн. 2024 г., 21:30:36
+[debug] > Exec(idea-shell, None, None)

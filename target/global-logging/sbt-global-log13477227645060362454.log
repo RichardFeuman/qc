@@ -1,0 +1,12 @@
+[debug] > Exec(all {file:/C:/Users/Tester/spark_c/spark-course2/}spark-course2/products {file:/C:/Users/Tester/spark_c/spark-course2/}spark-course2/test:products, None, None)
+[debug] Evaluating tasks: Compile / products, Test / products
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[info] compiling 1 Scala source to C:\Users\Tester\spark_c\spark-course2\target\scala-2.13\classes ...
+[warn] C:\Users\Tester\spark_c\spark-course2\src\main\scala\PatternMatching.scala:37:3: match may not be exhaustive.
+[warn] It would fail on the following input: Coffee((x: String forSome x not in ("capuccinoX2", "latteX2")), _)
+[warn]   coffee1 match {
+[warn]   ^
+[warn] one warning found
+[info] done compiling
+[success] Total time: 3 s, completed 17 июн. 2024 г., 23:19:56
+[debug] > Exec(idea-shell, None, None)

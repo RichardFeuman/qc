@@ -1,0 +1,11 @@
+[debug] > Exec(all {file:/C:/Users/Tester/spark_c/spark-course2/}spark-course2/products {file:/C:/Users/Tester/spark_c/spark-course2/}spark-course2/test:products, None, None)
+[debug] Evaluating tasks: Compile / products, Test / products
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[info] compiling 1 Scala source to C:\Users\Tester\spark_c\spark-course2\target\scala-2.13\classes ...
+[error] C:\Users\Tester\spark_c\spark-course2\src\main\scala\NEWWorkWithJSON.scala:17:14: macro annotation could not be expanded (since these are experimental, you must enable them with -Ymacro-annotations)
+[error]   case class Amazon(
+[error]              ^
+[error] one error found
+[error] (Compile / compileIncremental) Compilation failed
+[error] Total time: 1 s, completed 30 июн. 2024 г., 17:39:44
+[debug] > Exec(idea-shell, None, None)

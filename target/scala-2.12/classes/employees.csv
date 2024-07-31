@@ -1,0 +1,21 @@
+department,salary,employee_id,first_name,last_name
+Accounting,50000,1,Ivan,Ivanov
+Marketing,60000,2,Anna,Petrova
+Sales,55000,3,Sergey,Sidorov
+Development,70000,4,Elena,Kuznetsova
+HR,65000,5,Oleg,Semenov
+IT,280000,6,Maria,Fedorova
+Logistics,62000,7,Dmitry,Popov
+Finance,58000,8,Tatiana,Selezneva
+Research,72000,9,Alexey,Nikolaev
+Customer Service,54000,10,Natalia,Selezneva
+Accounting,50000,1,Ivan,Ivanov
+Marketing,60000,2,Anna,Petrova
+Sales,55000,3,Sergey,Sidorov
+Development,70000,4,Elena,Kuznetsova
+HR,65000,5,Oleg,Semenov
+IT,200000,6,Maria,Fedorova
+Logistics,62000,7,Dmitry,Popov
+Finance,58000,8,Tatiana,Selezneva
+Research,72000,9,Alexey,Nikolaev
+Customer Service,54000,10,Natalia,Selezneva
