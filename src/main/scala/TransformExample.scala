@@ -23,10 +23,10 @@ object TransformExample extends App {
 
   val DF=spark.read.option("delimiter", ",").option("header", "true").csv(apPath)
 
-  def doubleSalary(df: DataFrame) : DataFrame ={
-    df.withColumn("double_salary", df("salary")*2)
+  def tripleSalary(df: DataFrame) : DataFrame ={
+    df.withColumn("double_salary", df("salary")*3)
   }
 
-  val DF2=DF.transform(doubleSalary)
+  val DF2=DF.transform(tripleSalary)
   DF2.show()
 }
