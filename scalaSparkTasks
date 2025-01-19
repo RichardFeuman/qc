@@ -1,6 +1,7 @@
 package com.example
 
-import com.example.LogAnalysis.LogRecord.unapply
+import LogAnalysis.LogRecord.unapply
+
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql
 import org.apache.spark.sql.functions.{col, when}
@@ -8,7 +9,7 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 
 import scala.util.Try
 
-object LogAnalysis extends App {
+object LogAnalysis2 extends App {
 
   /*
   1. считать логи из файла в rdd. Для этого изучите содержимое файла, структуру данных и выведите свои правила,
@@ -49,39 +50,6 @@ object LogAnalysis extends App {
     .master("local")
     .getOrCreate()
 
-  val logsDF: DataFrame = spark.read
-    .option("header", "true")
-    .option("inferSchema", "true")
-    .csv("resources/data/fruits.csv") // "resources/data/logs_data.csv"
-
-  println(logsDF.describe())
-
-  println(s"logs df count ${logsDF.count()}")
-
-  val test = logsDF.select(logsDF.columns.map(c => sql.functions.count(when(col(c).isNull ||
-    col(c) === "" || col(c).isNaN, c)).alias(c)): _*)
-
-  test.show()  // null нет ни в одном столбце
-
-  // ,host,time,method,url,response,bytes
-  // 0,***.novo.dk,805465029,GET,/ksc.html,200,7067
-
-  /*
-  object ReaderOfCsv {
-  case class Config(file: String, separator: Char = ',', hasHeader: Boolean = true)
-  }
-
-  class ReaderOfCsv(spark: SparkSession) extends ReaderOfDataFrame {
-    override def read(config: ReaderOfCsv.Config): DataFrame = {
-      spark.read
-        .option("header", config.hasHeader.toString.toLowerCase)
-        .option("sep", config.separator.toString)
-        .csv(config.file)
-    }
-  }
-   */
-
-  import com.example.readers.ReaderOfCsv._
 
   // ,host,time,method,url,response,bytes
 
@@ -111,29 +79,14 @@ object LogAnalysis extends App {
     println(s"num of not readed records : ${successAndNotRecordsCntCp.notSucessRecordsCnt}")
   }
 
-  case class Record(stats: Option[Int])
-
   case class LogRecord(host: String ,time: String, method: String,url: String, response: Option[Int],bytes : String )
 
   case class SucceccAndNotRecordsCnt(successRecordsCnt: Int, notSucessRecordsCnt: Int)
 
   object LogRecord {
     def unapply(lr: LogRecord): Option[Int] = Some(lr.response.getOrElse(-1))
-  }
 
-//  def getStatByNulls(rdd: RDD[Array[LogRecord]]) = {
-//
-//    require(rdd.count()>0, "rdd is empty")
-//
-//    val successReadRecordsCnt = rdd.map(value => Record(
-//        Try(value(4).toInt).toOption))
-//      .filter(rec => rec.stats.nonEmpty).count()
-//
-//    val notSuccessReadRecordsCnt = rdd.count() - successReadRecordsCnt
-//
-//    SucceccAndNotRecordsCnt(successReadRecordsCnt.toInt, notSuccessReadRecordsCnt.toInt)
-//
-//  }
+  }
 
   def tryWrapToClass(rddLine: Array[String]) = {
       LogRecord(host = rddLine(0) ,
@@ -146,89 +99,102 @@ object LogAnalysis extends App {
   }
 
 
-//  val rdd = spark.sparkContext.textFile("resources/data/fruits.csv")
-//
-//  val header: String = rdd.first()
-//  // Filter out the header and split each line by a | (assuming CSV format)
-//  val rddWithoutHeader = rdd.filter(_ != header).map(line => line.split(","))
-//  println(rddWithoutHeader.count())
 
-
-  val aggFunc : (Int, Int) => Int = (acc, count) => acc + count // t2
 
   val logsRDD = readCsvToRDD("resources/data/logs_data.csv") // t1
-  // distplayStatAfterRead(getStatByNulls(logsRDD)) // t1
   logsRDD.collect().filter(x=>x.response.isEmpty).foreach(println)
 
 
 
   // 2. следующее задание - найти количество записей для каждого кода ответа (response)
 
+  val aggFunc : (Int, Int) => Int = (acc, count) => acc + count // t2
 
-  def aggregateLogData(rdd: RDD[Array[Int]], reduceOp: (Int, Int) => Int) = {
+  def aggregateLogData(rdd: RDD[Int], reduceOp: (Int, Int) => Int) = {
 
     require(rdd != null, "Input RDD cannot be null")
     require(rdd.count()>0, "Input RDD cannot be empty")
     require(reduceOp != null, "Reduce operation function cannot be null")
 
       val rddCopy = rdd
-      val pairedRdd = rddCopy.map{arr=>(arr(0), 1)}
+      val pairedRdd = rddCopy.map{line=>(line, 1)}
 
-      //val aggFunc : (Int, Int) => Double = (acc, count) => acc reduceOp count
       val aggregatedRdd = pairedRdd.reduceByKey(reduceOp)
       aggregatedRdd
 
   }
 
-//    def aggregateLogData[A](rdd: RDD[Array[A]], reduceOp: (Int, Int) => Int) = {
-//
-//      require(rdd != null, "Input RDD cannot be null")
-//      require(rdd.count()>0, "Input RDD cannot be empty")
-//      require(reduceOp != null, "Reduce operation function cannot be null")
-//
-//        val rddCopy = rdd
-//        val pairedRdd = rddCopy.map{arr=>(arr(0), 1)}
-//
-//        //val aggFunc : (Int, Int) => Double = (acc, count) => acc reduceOp count
-//        val aggregatedRdd = pairedRdd.reduceByKey(reduceOp)
-//        aggregatedRdd
-//
-//    }
 
+  val extractFieldFromRddBeforeGetResponseCountStat: (RDD[LogRecord]) => RDD[Int] = (rddWithLogData) => {
 
-
-//  def extractRequiredFields(rdd: RDD[LogRecord], indexOfColsToExtract: Seq[Int]) = {
-//
-//    require(rdd != null, "Input RDD cannot be null")
-//    require(rdd.count()>0, "Input RDD cannot be empty")
-//    require(indexOfColsToExtract != null, "seq with index of fields cannot be null")
-//    require(indexOfColsToExtract.size > 0, "seq with index of fields cannot be empty")
-//
-//      rdd.map{lr=>
-//        lr.zipWithIndex.filter{fnWithIndex=>
-//        indexOfColsToExtract
-//          .contains(fnWithIndex._2)}
-//      }.map{fieldsWithIndex => fieldsWithIndex.map{fnWithIndex => Option(fnWithIndex._1)}}
-//
-//  }
-
-  val extractFieldFromRddBeforeGetResponseStat: (RDD[LogRecord]) => RDD[Array[Int]] = (rddWithLogData) => {
-    // spark.sparkContext.parallelize(rddWithLogData.map{lr=>(lr.response.getOrElse(-1))})
-    rddWithLogData.map{lr=> Array(unapply(lr).getOrElse(-1)) }
+    rddWithLogData.map{lr=> LogRecord.unapply(lr).getOrElse(-1) }
   }
 
-//  val fieldIndexesToExtract = Seq(4)
-//
-//  val rddWithResponseCodeOnly = extractRequiredFields(logsRDD, fieldIndexesToExtract)
-//  aggregateLogData(rddWithResponseCodeOnly, aggFunc).collect().foreach(println)
+  val extractFieldFromRddBeforeCalculateBytesStat: (RDD[LogRecord]) => RDD[Int] = (rddWithLogData) => {
 
-  val rddWithResponseCodeOnly = extractFieldFromRddBeforeGetResponseStat(logsRDD) // .collect().take(15).foreach(println)
+    rddWithLogData.map{lr=> lr.bytes.toInt }
+
+  }
+
+
+  val rddWithResponseCodeOnly = extractFieldFromRddBeforeGetResponseCountStat(logsRDD)
   val codeResponseCntRdd = aggregateLogData(rddWithResponseCodeOnly, aggFunc)
 
   codeResponseCntRdd.collect().foreach(println)
 
+  /*
+  3. следует собрать статистику по размеру ответа (bytes):
+    сколько всего байт было отправлено (сумма всех значений), среднее значение,
+    максимальное и минимальное значение.
+   */
 
+
+
+  def getAverageOfBytesVolume(rdd: RDD[Int]) = {
+    require(rdd.count() > 0, "passed rdd is empty")
+    require(rdd.isInstanceOf[RDD[Int]], "not rdd was passed")
+    val pair = rdd.map{b=> (b, 1)}.reduce((u, v) => (u._1 + v._1, u._2 + v._2 ))
+    pair._1/pair._2
+
+  }
+
+  def getSumOfBytesVolume(rdd: RDD[Int]) = {
+    require(rdd.count() > 0, "passed rdd is empty")
+    require(rdd.isInstanceOf[RDD[Int]], "not rdd was passed")
+    rdd.sum()
+
+
+  }
+
+  def getMinOfBytesVolume(rdd: RDD[Int]) = {
+    require(rdd.count() > 0, "passed rdd is empty")
+    require(rdd.isInstanceOf[RDD[Int]], "not rdd was passed")
+    rdd.min()
+
+  }
+
+  def getMaxOfBytesVolume(rdd: RDD[Int]) = {
+    require(rdd.count() > 0, "passed rdd is empty")
+    require(rdd.isInstanceOf[RDD[Int]], "not rdd was passed")
+    rdd.max()
+
+  }
+
+  def getStatOfBytesResponse(bytesRDD: RDD[Int],
+                             fToGetAvg: (RDD[Int]) => Int,
+                             fToGetMin: (RDD[Int]) => Int,
+                             fToGetMax: (RDD[Int]) => Int,
+                             fToGetSum: (RDD[Int]) => Double
+                            ) ={
+    require(bytesRDD.count() > 0, "passed rdd is empty")
+    require(bytesRDD.isInstanceOf[RDD[Int]], "not rdd was passed")
+    (fToGetAvg(bytesRDD) , fToGetMin(bytesRDD), fToGetMax(bytesRDD), fToGetSum(bytesRDD))
+  }
+
+  val rddWithBytesOnly = extractFieldFromRddBeforeCalculateBytesStat(logsRDD)
+  println(getStatOfBytesResponse(rddWithBytesOnly,getAverageOfBytesVolume, getMinOfBytesVolume, getMaxOfBytesVolume, getSumOfBytesVolume))
 
 
 
 }
+
